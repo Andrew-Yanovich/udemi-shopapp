@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/cart.dart';
 import '../widgets/products_grid.dart';
+import '../widgets/badge.dart';
 
 enum FilterOptions {
   favorites,
@@ -15,6 +18,7 @@ class ProductsOverviewScreen extends StatefulWidget {
 
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   var _showOnlyFavorites = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,9 +26,9 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         title: const Text('My Shop'),
         actions: [
           PopupMenuButton(
-            onSelected: (FilterOptions selectedValue){
+            onSelected: (FilterOptions selectedValue) {
               setState(() {
-                if(selectedValue == FilterOptions.favorites){
+                if (selectedValue == FilterOptions.favorites) {
                   _showOnlyFavorites = true;
                 } else {
                   _showOnlyFavorites = false;
@@ -32,16 +36,27 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
               });
             },
             icon: const Icon(Icons.more_vert),
-            itemBuilder: (_) => [
-              PopupMenuItem(
+            itemBuilder: (_) =>
+            [
+              const PopupMenuItem(
                 child: Text('Only Favorites'),
                 value: FilterOptions.favorites,
               ),
-              PopupMenuItem(
+              const PopupMenuItem(
                 child: Text('Show All'),
                 value: FilterOptions.all,
               ),
             ],
+          ),
+          Consumer<Cart>(builder: (_, cart, ch) =>
+              Badge(
+                child: ch!,
+                value: cart.itemCount.toString(),
+              ),
+            child: IconButton(
+              icon: const Icon(Icons.shopping_cart),
+              onPressed: (){},
+            ),
           ),
         ],
       ),
