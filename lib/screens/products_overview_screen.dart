@@ -22,6 +22,7 @@ class ProductsOverviewScreen extends StatefulWidget {
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   var _showOnlyFavorites = false;
   var _isInit = true;
+  var _isLoading = false;
 
   @override
   void initState() {
@@ -35,8 +36,15 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   @override
   void didChangeDependencies() {
     // 3 //
-    if(_isInit){
-      Provider.of<Products>(context).fetchAndSetProducts();
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<Products>(context).fetchAndSetProducts().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
     }
     //  //
     _isInit = false;
@@ -60,8 +68,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
               });
             },
             icon: const Icon(Icons.more_vert),
-            itemBuilder: (_) =>
-            [
+            itemBuilder: (_) => [
               const PopupMenuItem(
                 child: Text('Only Favorites'),
                 value: FilterOptions.favorites,
@@ -72,14 +79,14 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
               ),
             ],
           ),
-          Consumer<Cart>(builder: (_, cart, ch) =>
-              Badge(
-                child: ch!,
-                value: cart.itemCount.toString(),
-              ),
+          Consumer<Cart>(
+            builder: (_, cart, ch) => Badge(
+              child: ch!,
+              value: cart.itemCount.toString(),
+            ),
             child: IconButton(
               icon: const Icon(Icons.shopping_cart),
-              onPressed: (){
+              onPressed: () {
                 Navigator.of(context).pushNamed(CartScreen.routeName);
               },
             ),
@@ -87,7 +94,9 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         ],
       ),
       drawer: const AppDrawer(),
-      body: ProductsGrid(showFavs: _showOnlyFavorites),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ProductsGrid(showFavs: _showOnlyFavorites),
     );
   }
 }
