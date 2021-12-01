@@ -69,7 +69,7 @@ class Products with ChangeNotifier {
 
   Future<void> addProduct(Product product) async {
     final url = Uri.parse(
-        'https://udemi-shop-app-default-rtdb.europe-west1.firebasedatabase.app/prodcts');
+        'https://udemi-shop-app-default-rtdb.europe-west1.firebasedatabase.app/prodcts.json');
     try {
       final response = await http.post(
         url,
