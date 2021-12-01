@@ -67,6 +67,17 @@ class Products with ChangeNotifier {
   //   notifyListeners();
   // }
 
+  Future<void> fetchAndSetProducts() async {
+    final url = Uri.parse(
+        'https://udemi-shop-app-default-rtdb.europe-west1.firebasedatabase.app/prodcts.json');
+    try {
+      final response = await http.get(url);
+      print(json.decode(response.body));
+    } catch(error){
+      throw error;
+    }
+  }
+
   Future<void> addProduct(Product product) async {
     final url = Uri.parse(
         'https://udemi-shop-app-default-rtdb.europe-west1.firebasedatabase.app/prodcts.json');
