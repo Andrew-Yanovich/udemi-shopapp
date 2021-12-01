@@ -67,9 +67,9 @@ class Products with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  void addProduct(Product product) {
+  Future<void> addProduct(Product product) {
     final url = Uri.parse('https://udemi-shop-app-default-rtdb.europe-west1.firebasedatabase.app/prodcts.json');
-    http.post(url, body: json.encode({
+    return http.post(url, body: json.encode({
       'title': product.title,
       'description': product.description,
       'price': product.price,
