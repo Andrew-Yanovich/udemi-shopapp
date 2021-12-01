@@ -138,8 +138,22 @@ class Products with ChangeNotifier {
     }
   }
 
-  void deleteProduct(String id) {
-    _items.removeWhere((prod) => prod.id == id);
+  void deleteProduct(String id){
+    final url = Uri.parse(
+        'https://udemi-shop-app-default-rtdb.europe-west1.firebasedatabase.app/prodcts/$id.json');
+    final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
+    Product? existingProduct = _items[existingProductIndex];
+    // _items.removeWhere((prod) => prod.id == id);
+    http.delete(url).then((response){
+      if(response.statusCode >= 400){
+
+      }
+      existingProduct = null;
+    }).catchError((_) {
+      _items.insert(existingProductIndex, existingProduct!);
+      notifyListeners();
+    });
+    _items.removeAt(existingProductIndex);
     notifyListeners();
   }
 }
