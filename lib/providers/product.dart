@@ -25,11 +25,11 @@ class Product with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> toggleFavoriteStatus() async {
+  Future<void> toggleFavoriteStatus(String token) async {
     final oldStatus = isFavorite;
     _setFavValue(!isFavorite);
     final url = Uri.parse(
-        'https://udemi-shop-app-default-rtdb.europe-west1.firebasedatabase.app/prodcts/$id.json');
+        'https://udemi-shop-app-default-rtdb.europe-west1.firebasedatabase.app/prodcts/$id.json?auth=$token');
     try {
       final response = await http.patch(url, body: json.encode({
         'isFavorite': isFavorite,

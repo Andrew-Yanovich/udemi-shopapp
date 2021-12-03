@@ -100,7 +100,7 @@ class Products with ChangeNotifier {
 
   Future<void> addProduct(Product product) async {
     final url = Uri.parse(
-        'https://udemi-shop-app-default-rtdb.europe-west1.firebasedatabase.app/prodcts.json');
+        'https://udemi-shop-app-default-rtdb.europe-west1.firebasedatabase.app/prodcts.json?auth=$authToken');
     try {
       final response = await http.post(
         url,
@@ -131,7 +131,7 @@ class Products with ChangeNotifier {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
       final url = Uri.parse(
-          'https://udemi-shop-app-default-rtdb.europe-west1.firebasedatabase.app/prodcts/$id.json');
+          'https://udemi-shop-app-default-rtdb.europe-west1.firebasedatabase.app/prodcts/$id.json?auth=$authToken');
       await http.patch(url,
           body: json.encode({
             'title': newProduct.title,
@@ -148,7 +148,7 @@ class Products with ChangeNotifier {
 
   Future<void> deleteProduct(String id) async {
     final url = Uri.parse(
-        'https://udemi-shop-app-default-rtdb.europe-west1.firebasedatabase.app/prodcts/$id.json');
+        'https://udemi-shop-app-default-rtdb.europe-west1.firebasedatabase.app/prodcts/$id.json?auth=$authToken');
     final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
     Product? existingProduct = _items[existingProductIndex];
     // _items.removeWhere((prod) => prod.id == id);
