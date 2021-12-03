@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
           create: (ctx) => Auth(),
         ),
       ],
-      child: MaterialApp(
+      child: Consumer<Auth>(builder: (ctx, auth, _) => MaterialApp(
         title: 'MyShop',
         theme: ThemeData(
           fontFamily: 'Lato',
@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
             secondary: Colors.deepOrange,
           ),
         ),
-        home: AuthScreen(),
+        home: auth.isAuth ? ProductsOverviewScreen() : AuthScreen(),
         routes: {
           ProductDetailScreen.routName: (ctx) => ProductDetailScreen(),
           CartScreen.routeName: (ctx) => CartScreen(),
@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
           EditProductScreen.routName: (ctx) => EditProductScreen(),
           // AuthScreen.routeName: (ctx) => AuthScreen(),
         },
-      ),
+      ),),
     );
   }
 }
