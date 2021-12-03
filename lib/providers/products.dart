@@ -42,7 +42,9 @@ class Products with ChangeNotifier {
   ];
 
   final String authToken;
-  Products(this.authToken, this._items);
+  final String userId;
+
+  Products(this.authToken, this.userId, this._items);
 
   // var _showFavoritesOnly = false;
 
@@ -77,9 +79,13 @@ class Products with ChangeNotifier {
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
-      if(extractedData == null){
+      if (extractedData == null) {
         return;
       }
+      final favoriteUrl = Uri.parse(
+          'https://udemi-shop-app-default-rtdb.europe-west1.firebasedatabase.app/userFavorites/$userId.json?auth=$authToken');
+      final favoriteResponse = await http.get(favoriteUrl);
+      final favoriteData = json.decode(favoriteResponse.body);
       final List<Product> loadedProducts = [];
       extractedData.forEach((prodId, prodData) {
         loadedProducts.add(Product(
@@ -88,7 +94,7 @@ class Products with ChangeNotifier {
           description: prodData['description'],
           price: prodData['price'],
           imageUrl: prodData['imageUrl'],
-          isFavorite: prodData['isFavorite'],
+          isFavorite: favoriteData == null ? false : favoriteData[prodId] ?? false,
         ));
         _items = loadedProducts;
         notifyListeners();
@@ -109,7 +115,6 @@ class Products with ChangeNotifier {
           'description': product.description,
           'price': product.price,
           'imageUrl': product.imageUrl,
-          'isFavorite': product.isFavorite,
         }),
       );
       final newProduct = Product(
@@ -164,6 +169,5 @@ class Products with ChangeNotifier {
       throw HttpException(message: 'Could not delete product.');
     }
     existingProduct = null;
-
   }
 }

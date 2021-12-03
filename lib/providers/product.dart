@@ -20,21 +20,24 @@ class Product with ChangeNotifier {
     this.isFavorite = false,
   });
 
-  void _setFavValue(bool newValue){
+  void _setFavValue(bool newValue) {
     isFavorite = newValue;
     notifyListeners();
   }
 
-  Future<void> toggleFavoriteStatus(String token) async {
+  Future<void> toggleFavoriteStatus(String token, String userId) async {
     final oldStatus = isFavorite;
     _setFavValue(!isFavorite);
     final url = Uri.parse(
-        'https://udemi-shop-app-default-rtdb.europe-west1.firebasedatabase.app/prodcts/$id.json?auth=$token');
+        'https://udemi-shop-app-default-rtdb.europe-west1.firebasedatabase.app/userFavorites/$userId/$id.json?auth=$token');
     try {
-      final response = await http.patch(url, body: json.encode({
-        'isFavorite': isFavorite,
-      }));
-      if(response.statusCode >= 400){
+      final response = await http.put(
+        url,
+        body: json.encode(
+          isFavorite,
+        ),
+      );
+      if (response.statusCode >= 400) {
         _setFavValue(oldStatus);
       }
     } catch (error) {

@@ -42,9 +42,13 @@ class ProductItem extends StatelessWidget {
           leading: Consumer<Product>(
             builder: (ctx, product, _) => IconButton(
               onPressed: () {
-                product.toggleFavoriteStatus(authData.token!);
+                product.toggleFavoriteStatus(
+                  authData.token!,
+                  authData.userId!,
+                );
               },
-              icon: Icon(product.isFavorite ? Icons.favorite : Icons.favorite_border),
+              icon: Icon(
+                  product.isFavorite ? Icons.favorite : Icons.favorite_border),
               color: Theme.of(context).colorScheme.secondary,
             ),
             child: Text('Never changes!'),
@@ -68,7 +72,7 @@ class ProductItem extends StatelessWidget {
                 duration: const Duration(seconds: 2),
                 action: SnackBarAction(
                   label: 'UNDO',
-                  onPressed: (){
+                  onPressed: () {
                     cart.removeSingleItem(product.id);
                   },
                 ),
