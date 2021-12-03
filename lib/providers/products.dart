@@ -41,6 +41,9 @@ class Products with ChangeNotifier {
     // ),
   ];
 
+  final String authToken;
+  Products(this.authToken, this._items);
+
   // var _showFavoritesOnly = false;
 
   List<Product> get items {
@@ -70,7 +73,7 @@ class Products with ChangeNotifier {
 
   Future<void> fetchAndSetProducts() async {
     final url = Uri.parse(
-        'https://udemi-shop-app-default-rtdb.europe-west1.firebasedatabase.app/prodcts.json');
+        'https://udemi-shop-app-default-rtdb.europe-west1.firebasedatabase.app/prodcts.json?auth=$authToken');
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
