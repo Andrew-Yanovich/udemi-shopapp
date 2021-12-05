@@ -32,9 +32,10 @@ class ProductItem extends StatelessWidget {
               arguments: product.id,
             );
           },
-          child: Image.network(
-            product.imageUrl,
-            fit: BoxFit.cover,
+          child: FadeInImage(
+            placeholder: const AssetImage('assets/images/product-placeholder.png'),
+            image: NetworkImage(product.imageUrl),
+            fit: BoxFit.fitHeight,
           ),
         ),
         footer: GridTileBar(
@@ -51,7 +52,7 @@ class ProductItem extends StatelessWidget {
                   product.isFavorite ? Icons.favorite : Icons.favorite_border),
               color: Theme.of(context).colorScheme.secondary,
             ),
-            child: Text('Never changes!'),
+            child: const Text('Never changes!'),
           ),
           title: Text(
             product.title,
